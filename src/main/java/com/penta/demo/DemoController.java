@@ -13,6 +13,11 @@ public class DemoController {
         return "Hello, World!";
     }
 
+    @GetMapping("/hello/bangla")
+    public String helloBangladesh() {
+        return "Hello, Bangladesh!";
+    }
+
     @GetMapping("/goodbye")
     public String goodbye() {
         return "Goodbye, World!";
