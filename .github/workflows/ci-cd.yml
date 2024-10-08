@@ -34,27 +34,29 @@ jobs:
       - name: Build Docker image
         run: docker build -t borhan20/demo .
 
-
       - name: Push Docker image to Docker Hub
         run: docker push borhan20/demo:latest
 
       - name: Deploy to Production
         run: |
           docker compose up -d --build
-          # Example of deploying to a server or cloud provider
-          # This step is highly specific to your deployment environment
-          # For example, use SSH to copy the Docker image and run it on a server
+          # Note: Add specific deployment commands if applicable
+
       - name: Install ngrok
         run: |
           curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
           echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
-          sudo apt update && sudo apt install ngrok
+          sudo apt update && sudo apt install -y ngrok
 
       - name: Authenticate ngrok
+        run: ngrok authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
+
+      - name: Start ngrok tunnel
         run: |
-          ngrok authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-          ngrok http 8080 > /dev/null &
+          nohup ngrok http 8080 > ngrok.log &
           sleep 5
 
       - name: Get ngrok URL
-        run: curl http://127.0.0.1:8080/api/tunnels
+        run: |
+          echo "Fetching ngrok public URL..."
+          curl -s http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url'
