@@ -6,8 +6,8 @@ services:
     container_name: spring-boot-app
     ports:
       - "8080:8080"
-    # volumes:
-    #   - ./home/borhan/Documents/docker_session/docker-compose/volume_data:/app  
+    volumes:
+      - /home/borhan/Documents/docker_session:/var/lib/app:rw
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5433/your_database
       SPRING_DATASOURCE_USERNAME: postgres
